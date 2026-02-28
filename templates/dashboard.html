@@ -18,8 +18,20 @@
             
             <div class="dashboard-content">
                 <div class="welcome-card">
+                    <h2>Welcome, {{ username }}!</h2>
+                     {% if age_category %}
+                    <p>Your age category: {{ age_category }}</p>
+                        {% else %}
+                    <p>Age category not available.</p>
+                        {% endif %}
+
+                        {% if hobby %}
+                     <p>Your hobby: {{ hobby }}</p>
+                    {% endif %}
+=======
                     <h1>Welcome, {{ username }}!</h1>
                     <p>You have successfully logged in to your account.</p>
+>>>>>>> 4ad80b9d1681d2a8dcac070c67dd7d3cc142b572
                 </div>
                 
                 <div class="info-card">

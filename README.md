@@ -30,11 +30,14 @@ password_auth/
 
 ## Installation
 
+<<<<<<< HEAD
+=======
 1. **Install Python dependencies:**
    ```bash
    pip install -r requirements.txt
    ```bash
 
+>>>>>>> 4ad80b9d1681d2a8dcac070c67dd7d3cc142b572
 ## Running the Application
 
 1. **Start the Flask server:**

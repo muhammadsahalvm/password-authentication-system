@@ -27,7 +27,40 @@
                         required
                     >
                 </div>
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input 
+                        type="number" 
+                        id="age" 
+                        name="age" 
+                        placeholder="Enter your age" 
+                        min="1"
+                        required
+                    >
+                </div>
+                <div
+                    class="form-group">
+                    <label for="hobby">Hobby</label>
+                    <input 
+                        type="text" 
+                        id="hobby" 
+                        name="hobby" 
+                        placeholder="Enter your hobby" 
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="Enter your email" 
+                        required
+                    >
+                </div>
+=======
                 
+>>>>>>> 4ad80b9d1681d2a8dcac070c67dd7d3cc142b572
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="password-input-wrapper">
@@ -88,6 +121,11 @@
             e.preventDefault();
             
             const username = document.getElementById('username').value;
+            const age = document.getElementById('age').value;
+            const hobby = document.getElementById('hobby').value;
+            const email = document.getElementById('email').value;
+=======
+>>>>>>> 4ad80b9d1681d2a8dcac070c67dd7d3cc142b572
             const password = document.getElementById('password').value;
             const confirm_password = document.getElementById('confirm_password').value;
             const messageDiv = document.getElementById('message');
@@ -100,6 +138,11 @@
                     },
                     body: JSON.stringify({
                         username: username,
+                        age: age,
+                        hobby: hobby,
+                        email: email,   
+=======
+>>>>>>> 4ad80b9d1681d2a8dcac070c67dd7d3cc142b572
                         password: password,
                         confirm_password: confirm_password
                     })

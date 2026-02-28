@@ -21,6 +21,16 @@ def save_users(users):
     with open(USERS_DB, "w") as f:
         json.dump(users, f, indent=4, default=str)
 
+
+def categorize_age(age):
+    if age < 13:
+        return "Child"
+    elif 13 <= age <= 19:
+        return "Teenager"
+    elif 20 <= age <= 59:
+        return "Adult"
+    else:
+        return "Senior"
 def login_required(f):
     """Decorator to check if user is logged in"""
     @wraps(f)
@@ -44,23 +54,34 @@ def login():
         data = request.get_json()
         username = data.get('username')
         password = data.get('password')
-        
+
         if not username or not password:
             return jsonify({'success': False, 'message': 'Username and password required'})
-        
+
         users = load_users()
-        
+
         if username not in users:
             return jsonify({'success': False, 'message': 'Username does not exist'})
-        
+
         try:
-            stored_hash = bytes.fromhex(users[username])
+            user_record = users[username]
+            # Support legacy format where value is just the hex password string
+            if isinstance(user_record, str):
+                stored_hash = bytes.fromhex(user_record)
+                age_category = None
+            else:
+                stored_hash = bytes.fromhex(user_record.get('password'))
+                age_category = user_record.get('age_category')
+
             if verify_password(password, stored_hash):
                 session['username'] = username
-                return jsonify({'success': True, 'message': 'Login successful'})
+                if age_category:
+                    session['age_category'] = age_category
+                return jsonify({'success': True, 'message': 'Login successful', 'age_category': age_category})
             else:
                 return jsonify({'success': False, 'message': 'Incorrect password'})
-        except Exception as e:
+        except Exception:
+            return jsonify({'success': False, 'message': 'Error verifying password'})
             return jsonify({'success': False, 'message': 'Error verifying password'})
     
     return render_template('login.html')
@@ -71,12 +92,25 @@ def register():
     if request.method == 'POST':
         data = request.get_json()
         username = data.get('username')
+
+        age = data.get('age')
+        hobby = data.get('hobby').strip() if data.get('hobby') else ""
+        # age will be validated later
         password = data.get('password')
         confirm_password = data.get('confirm_password')
         
         if not username or not password or not confirm_password:
             return jsonify({'success': False, 'message': 'All fields required'})
         
+
+        # Validate and normalize age
+        if age is None:
+            return jsonify({'success': False, 'message': 'Age is required'})
+        try:
+            age_int = int(age)
+        except (TypeError, ValueError):
+            return jsonify({'success': False, 'message': 'Age must be a number'})
+
         if password != confirm_password:
             return jsonify({'success': False, 'message': 'Passwords do not match'})
         
@@ -92,7 +126,14 @@ def register():
         
         try:
             hashed_password = hash_password(password)
-            users[username] = hashed_password.hex()
+
+            # Store richer user record including age and category
+            users[username] = {
+                'password': hashed_password.hex(),
+                'age': age_int,
+                'age_category': categorize_age(age_int),
+                'hobby': hobby
+            }
             save_users(users)
             return jsonify({'success': True, 'message': 'Registration successful. Please login.'})
         except Exception as e:
@@ -104,8 +145,25 @@ def register():
 @login_required
 def dashboard():
     """Dashboard for logged-in users"""
-    return render_template('dashboard.html', username=session['username'])
 
+    users = load_users()
+    username = session['username']
+    
+    user_record = users.get(username)
+
+    age_category = None
+    hobby = None
+
+    if isinstance(user_record, dict):
+        age_category = user_record.get('age_category')
+        hobby = user_record.get('hobby')
+
+    return render_template(
+        'dashboard.html',
+        username=username,
+        age_category=age_category,
+        hobby=hobby
+    )
 @app.route('/logout')
 def logout():
     """Logout user"""
