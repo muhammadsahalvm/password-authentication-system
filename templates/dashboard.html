@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Authentication System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="background"></div>
+    
+    <div class="container">
+        <div class="dashboard-container">
+            <div class="navbar">
+                <h2>Dashboard</h2>
+                <a href="{{ url_for('logout') }}" class="btn btn-logout">Logout</a>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="welcome-card">
+                    <h2>Welcome, {{ username }}!</h2>
+                     {% if age_category %}
+                    <p>Your age category: {{ age_category }}</p>
+                        {% else %}
+                    <p>Age category not available.</p>
+                        {% endif %}
+
+                        {% if hobby %}
+                     <p>Your hobby: {{ hobby }}</p>
+                    {% endif %}
+                </div>
+                
+                <div class="info-card">
+                    <h3>Account Information</h3>
+                    <div class="info-item">
+                        <span class="label">Username:</span>
+                        <span class="value">{{ username }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Status:</span>
+                        <span class="value status-active">Active</span>
+                    </div>
+                </div>
+                
+                <div class="security-card">
+                    <h3>Security</h3>
+                    <p>✓ Your password is securely hashed using bcrypt</p>
+                    <p>✓ Session is active and secure</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
