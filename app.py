@@ -21,6 +21,7 @@ def save_users(users):
     with open(USERS_DB, "w") as f:
         json.dump(users, f, indent=4, default=str)
 
+
 def categorize_age(age):
     if age < 13:
         return "Child"
@@ -53,6 +54,7 @@ def login():
         data = request.get_json()
         username = data.get('username')
         password = data.get('password')
+
         if not username or not password:
             return jsonify({'success': False, 'message': 'Username and password required'})
 
@@ -80,6 +82,7 @@ def login():
                 return jsonify({'success': False, 'message': 'Incorrect password'})
         except Exception:
             return jsonify({'success': False, 'message': 'Error verifying password'})
+            return jsonify({'success': False, 'message': 'Error verifying password'})
     
     return render_template('login.html')
 
@@ -89,6 +92,7 @@ def register():
     if request.method == 'POST':
         data = request.get_json()
         username = data.get('username')
+
         age = data.get('age')
         hobby = data.get('hobby').strip() if data.get('hobby') else ""
         # age will be validated later
@@ -98,6 +102,7 @@ def register():
         if not username or not password or not confirm_password:
             return jsonify({'success': False, 'message': 'All fields required'})
         
+
         # Validate and normalize age
         if age is None:
             return jsonify({'success': False, 'message': 'Age is required'})
@@ -121,6 +126,7 @@ def register():
         
         try:
             hashed_password = hash_password(password)
+
             # Store richer user record including age and category
             users[username] = {
                 'password': hashed_password.hex(),
@@ -139,6 +145,7 @@ def register():
 @login_required
 def dashboard():
     """Dashboard for logged-in users"""
+
     users = load_users()
     username = session['username']
     
