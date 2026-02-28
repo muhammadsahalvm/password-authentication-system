@@ -53,7 +53,6 @@ def login():
         data = request.get_json()
         username = data.get('username')
         password = data.get('password')
-
         if not username or not password:
             return jsonify({'success': False, 'message': 'Username and password required'})
 
@@ -90,9 +89,9 @@ def register():
     if request.method == 'POST':
         data = request.get_json()
         username = data.get('username')
-        age = int(data.get('age'))
+        age = data.get('age')
         hobby = data.get('hobby').strip() if data.get('hobby') else ""
-        age_category = categorize_age(age)
+        # age will be validated later
         password = data.get('password')
         confirm_password = data.get('confirm_password')
         
